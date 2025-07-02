@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فایل‌کالا - قالب جامع فروشگاه</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Vazirmatn -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f0f1;
+        }
+        /* Digikala Color Palette */
+        .digikala-red { color: #ef4056; }
+        .bg-digikala-red { background-color: #ef4056; }
+        .border-digikala-red { border-color: #ef4056; }
+        .ring-digikala-red { --tw-ring-color: #ef4056; }
+        .bg-digikala-green { background-color: #00a049; }
+
+        /* General Layout Styles */
+        .page { display: none; }
+        .page.active { display: block; }
+        
+        /* Custom Accordion for FAQ */
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: bottom 0.5s ease-in-out;
+            z-index: 100;
+        }
+        #toast.show {
+            bottom: 30px;
+        }
+        
+        /* Wishlist Heart Icon */
+        .wishlist-btn .heart-icon {
+            transition: all 0.2s ease-in-out;
+        }
+        .wishlist-btn.active .heart-icon {
+            fill: #ef4056;
+            color: #ef4056;
+            transform: scale(1.2);
+        }
+
+        /* Product Detail Tabs */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .tab-btn.active { 
+            border-bottom-color: #ef4056;
+            color: #ef4056;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- =========== Main App View =========== -->
+    <div id="app-view" class="app-view active">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between h-16 border-b border-gray-200">
+                    <a href="#" onclick="navigateTo('home-page')" class="text-3xl font-extrabold digikala-red">فایل‌کالا</a>
+                    <div class="flex-1 max-w-xl mx-4">
+                        <div class="relative">
+                            <input type="text" id="search-input" placeholder="جستجو..." class="w-full bg-gray-100 rounded-lg px-4 py-2 pr-10 focus:outline-none focus:ring-2 ring-digikala-red">
+                            <i data-lucide="search" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-reverse space-x-4">
+                        <a href="#" onclick="navigateTo('login-page')" class="flex items-center space-x-reverse space-x-2 border border-gray-300 rounded-lg px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors">
+                            <i data-lucide="user" class="w-5 h-5"></i><span id="auth-link-text">ورود | ثبت‌نام</span>
+                        </a>
+                        <div class="h-8 border-l border-gray-300"></div>
+                        <a href="#" onclick="navigateTo('cart-page')" class="relative text-gray-600 hover:text-digikala-red">
+                            <i data-lucide="shopping-cart" class="w-7 h-7"></i><span id="cart-item-count" class="absolute -top-2 -right-2 bg-digikala-red text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                        </a>
+                    </div>
+                </div>
+                <nav class="hidden md:flex items-center h-12 text-sm">
+                    <ul class="flex items-center space-x-reverse space-x-6">
+                        <li><a href="#" onclick="navigateTo('home-page')" class="flex items-center space-x-reverse space-x-1 font-semibold hover:text-digikala-red"><i data-lucide="menu" class="w-5 h-5"></i><span>دسته‌بندی‌ها</span></a></li>
+                        <li><a href="#" onclick="navigateTo('products-page')" class="hover:text-digikala-red">محصولات</a></li>
+                        <li><a href="#" onclick="navigateTo('faq-page')" class="hover:text-digikala-red">سوالی دارید؟</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-6">
+            <!-- Home Page -->
+            <div id="home-page" class="page">
+                <div class="w-full h-64 md:h-96 bg-gray-300 rounded-2xl mb-6 flex items-center justify-center"><p class="text-gray-500">[اسلایدر اصلی]</p></div>
+                <section class="bg-red-700 rounded-2xl p-4 mb-6" style="background: linear-gradient(90deg, #ef4056 0%, #ef4c61 100%);">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-reverse space-x-2"><i data-lucide="gift" class="w-8 h-8 text-white"></i><h2 class="text-xl font-bold text-white">پیشنهادهای شگفت‌انگیز</h2></div>
+                        <a href="#" onclick="navigateTo('products-page')" class="text-sm font-semibold text-white bg-white/25 px-3 py-1 rounded-full">مشاهده همه</a>
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="amazing-offers-container"></div>
+                </section>
+                <section><h2 class="text-xl font-bold mb-4">پرفروش‌ترین‌ها</h2><div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="bestsellers-container"></div></section>
+            </div>
+
+            <!-- Products Page -->
+            <div id="products-page" class="page"><div class="flex flex-col md:flex-row gap-6"><aside class="w-full md:w-1/4"><div class="bg-white p-4 rounded-lg shadow"><h3 class="font-bold text-lg mb-4">فیلترها</h3><div class="mb-6"><h4 class="font-semibold mb-2">دسته‌بندی</h4><ul class="space-y-2 text-sm" id="filter-categories"></ul></div><div><h4 class="font-semibold mb-2">محدوده قیمت</h4><input type="range" class="w-full" style="accent-color: #ef4056;"></div></div></aside><section class="w-full md:w-3/4"><div class="bg-white p-4 rounded-lg shadow mb-4 flex items-center justify-between"><h1 class="text-xl font-bold">همه محصولات</h1><div class="flex items-center space-x-reverse space-x-2 text-sm"><span>مرتب‌سازی:</span><select class="border-none bg-gray-100 rounded p-1"><option>جدیدترین</option><option>پرفروش‌ترین</option></select></div></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="all-products-container"></div></section></div></div>
+
+            <!-- Product Detail Page -->
+            <div id="product-detail-page" class="page"></div>
+
+            <!-- Auth Pages -->
+            <div id="login-page" class="page"><div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg"><a href="#" onclick="navigateTo('home-page')" class="text-3xl font-extrabold digikala-red block text-center mb-6">فایل‌کالا</a><h2 class="text-xl font-bold mb-2">ورود</h2><p class="text-sm text-gray-600 mb-6">سلام! لطفا ایمیل و رمز عبور خود را وارد کنید</p><form id="login-form"><div class="mb-4"><input type="email" id="login-email" placeholder="ایمیل" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ring-digikala-red" required></div><div class="mb-4"><input type="password" id="login-password" placeholder="رمز عبور" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 ring-digikala-red" required></div><button type="submit" class="w-full bg-digikala-red text-white py-3 rounded-lg font-semibold hover:bg-red-600">ورود</button></form><div class="mt-4 text-center text-sm space-x-reverse space-x-4"><a href="#" onclick="navigateTo('register-page')" class="font-semibold text-blue-600">ایجاد حساب کاربری</a><a href="#" onclick="navigateTo('forgot-password-page')" class="font-semibold text-blue-600">بازیابی رمز عبور</a></div></div></div>
+            <div id="register-page" class="page"><div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg"><h2 class="text-xl font-bold mb-6 text-center">ثبت‌نام در فایل‌کالا</h2><form id="register-form"><div class="mb-4"><input type="text" id="register-name" placeholder="نام و نام خانوادگی" class="w-full px-4 py-3 border rounded-lg" required></div><div class="mb-4"><input type="email" id="register-email" placeholder="ایمیل" class="w-full px-4 py-3 border rounded-lg" required></div><div class="mb-4"><input type="password" id="register-password" placeholder="رمز عبور" class="w-full px-4 py-3 border rounded-lg" required></div><button type="submit" class="w-full bg-digikala-red text-white py-3 rounded-lg font-semibold">ثبت‌نام</button></form><p class="mt-4 text-center text-sm">حساب کاربری دارید؟ <a href="#" onclick="navigateTo('login-page')" class="font-semibold text-blue-600">وارد شوید</a></p></div></div>
+            <div id="forgot-password-page" class="page"><div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg text-center"><h2 class="text-xl font-bold mb-4">بازیابی رمز عبور</h2><p class="text-gray-600 mb-6">ایمیل خود را وارد کنید تا لینک بازیابی برایتان ارسال شود.</p><form id="forgot-password-form"><div class="mb-4"><input type="email" id="forgot-email" placeholder="ایمیل" class="w-full px-4 py-3 border rounded-lg" required></div><button type="submit" class="w-full bg-digikala-red text-white py-3 rounded-lg font-semibold">ارسال لینک</button></form></div></div>
+
+            <!-- User Dashboard Page -->
+            <div id="dashboard-page" class="page"><div class="flex flex-col md:flex-row gap-6"><aside class="w-full md:w-1/4"><div class="bg-white p-4 rounded-lg shadow"><div class="flex items-center gap-4 border-b pb-4 mb-4"><img src="https://i.pravatar.cc/80" class="w-16 h-16 rounded-full"><div id="dashboard-user-info"><p class="font-bold">کاربر مهمان</p></div></div><ul class="space-y-1" id="dashboard-nav"></ul></div></aside><section id="dashboard-content" class="w-full md:w-3/4"></section></div></div>
+
+            <!-- FAQ Page -->
+            <div id="faq-page" class="page"><div class="max-w-4xl mx-auto"><h1 class="text-3xl font-bold text-center mb-8">سوالات متداول</h1><div class="space-y-4" id="faq-container"></div></div></div>
+
+            <!-- Checkout Flow Pages -->
+            <div id="cart-page" class="page"><h1 class="text-2xl font-bold mb-6">سبد خرید شما (<span id="cart-page-item-count">0</span> کالا)</h1><div class="flex flex-col lg:flex-row gap-6"><div id="cart-items-container" class="w-full lg:w-2/3"></div><div id="cart-summary-container" class="w-full lg:w-1/3"></div></div></div>
+            <div id="checkout-flow-page" class="page"><h1 class="text-2xl font-bold mb-6">تکمیل فرآیند خرید</h1><div class="flex flex-col lg:flex-row gap-6"><div id="checkout-steps-container" class="w-full lg:w-2/3"></div><div id="checkout-summary-container" class="w-full lg:w-1/3"></div></div></div>
+            <div id="order-success-page" class="page"><div class="max-w-2xl mx-auto text-center bg-white p-8 rounded-lg shadow"><i data-lucide="check-circle-2" class="w-20 h-20 text-green-500 mx-auto mb-4"></i><h1 class="text-2xl font-bold mb-2">سفارش شما با موفقیت ثبت شد!</h1><p class="text-gray-600 mb-6">کد سفارش شما: <span id="order-success-code" class="font-mono font-bold"></span></p><p>می‌توانید فایل‌های خود را از بخش "سفارش‌های من" در پنل کاربری دانلود کنید.</p><a href="#" onclick="navigateTo('home-page')" class="mt-6 inline-block bg-digikala-red text-white px-8 py-3 rounded-lg font-semibold">بازگشت به صفحه اصلی</a></div></div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="px-6 py-3 rounded-lg shadow-lg text-white font-semibold"></div>
+
+    <script>
+    // --- شبیه‌سازی پایگاه داده ---
+    const DB = {
+        products: [
+            { id: 1, title: 'قالب شرکتی چندمنظوره وردپرس', category: 'قالب وردپرس', price: 120000, salePrice: 85000, imgSrc: 'https://placehold.co/600x600/3498db/ffffff?text=قالب', images: ['https://placehold.co/600x600/3498db/ffffff?text=قالب1','https://placehold.co/600x600/3498db/ffffff?text=قالب2','https://placehold.co/600x600/3498db/ffffff?text=قالب3'], reviews: [{user: 'علی رضایی', rating: 5, comment: 'عالی بود، خیلی کارم رو راه انداخت.'}] },
+            { id: 2, title: 'مجموعه کارت ویزیت خلاقانه', category: 'طرح لایه باز', price: 58000, salePrice: 49000, imgSrc: 'https://placehold.co/600x600/2ecc71/ffffff?text=کارت', images: [], reviews: [] },
+            { id: 3, title: 'کتاب جامع بازاریابی دیجیتال', category: 'کتاب الکترونیکی', price: 130000, salePrice: 65000, imgSrc: 'https://placehold.co/600x600/9b59b6/ffffff?text=کتاب', images: [], reviews: [{user: 'مریم احمدی', rating: 4, comment: 'کتاب خوب و کاملی بود.'}] },
+            { id: 4, title: 'پکیج ۱۰۰۰ آیکون خطی حرفه‌ای', category: 'آیکون', price: 45000, salePrice: 30000, imgSrc: 'https://placehold.co/600x600/e67e22/ffffff?text=آیکون', images: [], reviews: [] },
+            { id: 5, title: 'قالب فروشگاهی ووکامرس', category: 'قالب وردپرس', price: 150000, salePrice: 99000, imgSrc: 'https://placehold.co/600x600/e74c3c/ffffff?text=ووکامرس', images: [], reviews: [] },
+            { id: 6, title: 'مجموعه موکاپ بیلبورد شهری', category: 'طرح لایه باز', price: 70000, salePrice: null, imgSrc: 'https://placehold.co/600x600/34495e/ffffff?text=موکاپ', images: [], reviews: [] },
+            { id: 7, title: 'اسکریپت مدیریت مشتریان (CRM)', category: 'اسکریپت', price: 450000, salePrice: 390000, imgSrc: 'https://placehold.co/600x600/1abc9c/ffffff?text=CRM', images: [], reviews: [] },
+            { id: 8, title: 'دوره آموزشی جامع React.js', category: 'دوره آموزشی', price: 800000, salePrice: null, imgSrc: 'https://placehold.co/600x600/f1c40f/ffffff?text=React', images: [], reviews: [] },
+        ],
+        faq: [ { q: 'چگونه فایل خریداری شده را دانلود کنم؟', a: 'پس از تکمیل فرآیند خرید، به بخش "داشبورد کاربری" و سپس "سفارش‌های من" مراجعه کنید. لینک دانلود تمام فایل‌ها در این بخش موجود است.' }, { q: 'آیا محصولات شما پشتیبانی دارند؟', a: 'بله، تمامی محصولات ما شامل ۶ ماه پشتیبانی رایگان از طریق سیستم تیکت هستند.' }, { q: 'فرآیند بازگشت وجه به چه صورت است؟', a: 'در صورتی که محصول خریداری شده با توضیحات ارائه شده مغایرت داشته باشد، می‌توانید ظرف مدت ۷ روز درخواست بازگشت وجه خود را ثبت کنید.' }, ],
+        users: [ { id: 1, name: 'مدیر سیستم', email: 'admin@example.com', password: 'admin', joinDate: '۱۴۰۲/۱۰/۰۱', wishlist: [2, 5] }, { id: 2, name: 'کاربر نمونه', email: 'user@example.com', password: 'user', joinDate: '۱۴۰۳/۰۲/۱۵', wishlist: [1] } ],
+        orders: [ { id: 'DKC-123456', userId: 2, date: '۱۴۰۳/۰۴/۱۰', total: 150000, status: 'تکمیل شده' }, { id: 'DKC-123457', userId: 2, date: '۱۴۰۳/۰۴/۱۱', total: 85000, status: 'تکمیل شده' } ],
+    };
+
+    // --- وضعیت سراسری برنامه ---
+    let state = {
+        cart: [],
+        appliedDiscount: 0,
+        currentUser: null,
+        postLoginRedirect: null,
+        currentCheckoutStep: 'info'
+    };
+    let toastTimeout;
+
+    // --- توابع کمکی ---
+    const formatPrice = (price) => new Intl.NumberFormat('fa-IR').format(price) + ' تومان';
+    const getEl = (id) => document.getElementById(id);
+    const showToast = (message, type = 'success') => {
+        const toast = getEl('toast');
+        toast.textContent = message;
+        toast.className = `px-6 py-3 rounded-lg shadow-lg text-white font-semibold ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+    };
+
+    // --- مدیریت ناوبری و نمایش صفحات ---
+    function navigateTo(pageId, data = null) {
+        document.querySelectorAll('#app-view .page').forEach(p => p.classList.remove('active'));
+        const activePage = getEl(pageId);
+        if (activePage) {
+            if (pageId === 'product-detail-page' && data) renderProductDetailPage(data);
+            if (pageId === 'cart-page') renderCartPage();
+            if (pageId === 'checkout-flow-page') renderCheckoutFlowPage();
+            if (pageId === 'dashboard-page') renderDashboardPage();
+            activePage.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+    }
+    
+    // --- توابع رندر کردن محتوا ---
+    function createProductCard(product, isAmazingOffer = false) {
+        const price = product.salePrice ?? product.price;
+        const oldPrice = product.salePrice ? product.price : null;
+        const discountPercentage = oldPrice ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
+        return `<div class="product-card bg-white border border-gray-200 rounded-lg p-3 text-center transition-shadow hover:shadow-xl flex flex-col" data-product-id="${product.id}"><a href="#" class="block" onclick="event.preventDefault(); navigateTo('product-detail-page', ${product.id})"><img src="${product.imgSrc}" alt="${product.title}" class="w-full rounded-lg mb-3 aspect-square object-cover"></a><h3 class="product-title text-sm font-semibold h-10 mb-2 flex-grow">${product.title}</h3><div class="mt-auto">${discountPercentage > 0 ? `<div class="flex items-center justify-between mb-2"><span class="bg-digikala-red text-white text-xs font-bold px-2 py-1 rounded-full">${discountPercentage}٪</span><div class="text-lg font-bold">${formatPrice(price)}</div></div><div class="text-left text-gray-400 line-through text-sm">${formatPrice(oldPrice)}</div>` : `<div class="text-lg text-left font-bold pt-9">${formatPrice(price)}</div>`}${isAmazingOffer ? `<div class="w-full bg-gray-200 rounded-full h-1.5 mt-3"><div class="bg-digikala-red h-1.5 rounded-full" style="width: ${Math.random() * 60 + 20}%"></div></div>` : ''}<button onclick="addToCart(${product.id})" class="mt-4 w-full bg-digikala-red text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">افزودن به سبد</button></div></div>`;
+    }
+    
+    function renderHomePage() {
+        getEl('amazing-offers-container').innerHTML = DB.products.slice(0, 6).map(p => createProductCard(p, true)).join('');
+        getEl('bestsellers-container').innerHTML = DB.products.slice(2, 8).map(p => createProductCard(p, false)).join('');
+    }
+
+    function renderProductsPage(filteredProducts = DB.products) {
+        getEl('all-products-container').innerHTML = filteredProducts.map(p => createProductCard(p, false)).join('');
+        const categories = [...new Set(DB.products.map(p => p.category))];
+        getEl('filter-categories').innerHTML = categories.map(cat => `<li><label class="flex items-center"><input type="checkbox" class="form-checkbox category-filter rounded text-digikala-red ring-digikala-red ml-2" value="${cat}">${cat}</label></li>`).join('');
+        addFilterEventListeners();
+    }
+
+    function renderProductDetailPage(productId) {
+        const product = DB.products.find(p => p.id === productId);
+        if (!product) { navigateTo('home-page'); return; }
+        const price = product.salePrice ?? product.price;
+        const oldPrice = product.salePrice ? product.price : null;
+        const isWishlisted = state.currentUser?.wishlist.includes(productId);
+
+        const thumbnailsHTML = product.images.map((img, index) => `<img src="${img}" class="w-16 h-16 object-cover rounded-md cursor-pointer border-2 hover:border-digikala-red" onclick="changeMainImage('${img}')">`).join('');
+        const reviewsHTML = product.reviews.length > 0 ? product.reviews.map(r => `<div class="border-b py-4"><div class="flex items-center mb-2"><p class="font-bold">${r.user}</p><div class="flex mr-auto">${[...Array(5)].map((_, i) => `<i data-lucide="star" class="w-5 h-5 ${i < r.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}"></i>`).join('')}</div></div><p class="text-gray-600">${r.comment}</p></div>`).join('') : '<p class="text-gray-500">هنوز دیدگاهی برای این محصول ثبت نشده است.</p>';
+
+        getEl('product-detail-page').innerHTML = `
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <img id="main-product-image" src="${product.imgSrc}" class="w-full rounded-lg shadow-md mb-4">
+                        <div class="flex gap-2">${thumbnailsHTML}</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start">
+                             <h1 class="text-3xl font-bold mb-4">${product.title}</h1>
+                             <button onclick="toggleWishlist(${product.id})" class="wishlist-btn ${isWishlisted ? 'active' : ''} text-gray-400 hover:text-digikala-red p-2 rounded-full"><i data-lucide="heart" class="heart-icon"></i></button>
+                        </div>
+                        <p class="text-gray-600 mb-6">اینجا توضیحات کاملی در مورد محصول قرار می‌گیرد.</p>
+                        <div class="border-t border-b py-4 mb-6"><span class="text-sm text-gray-500">دسته بندی: ${product.category}</span></div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            ${oldPrice ? `<p class="text-xl text-gray-400 line-through">${formatPrice(oldPrice)}</p>` : ''}
+                            <p class="text-4xl font-extrabold digikala-red mb-4">${formatPrice(price)}</p>
+                            <button onclick="addToCart(${product.id})" class="w-full bg-digikala-red text-white py-3 rounded-lg font-bold text-lg hover:bg-red-700">افزودن به سبد خرید</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-12">
+                     <div class="border-b flex">
+                        <button class="tab-btn p-4 border-b-2 border-transparent" onclick="switchTab(this, 'desc')">نقد و بررسی</button>
+                        <button class="tab-btn p-4 border-b-2 border-transparent active" onclick="switchTab(this, 'reviews')">دیدگاه کاربران (${product.reviews.length})</button>
+                    </div>
+                    <div id="desc" class="tab-content p-4"><p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p></div>
+                    <div id="reviews" class="tab-content p-4 active">
+                        ${reviewsHTML}
+                        <div class="mt-8">
+                            <h3 class="font-bold text-lg mb-4">دیدگاه خود را بنویسید</h3>
+                            <form id="review-form"><textarea class="w-full border rounded-lg p-2 mb-2" rows="4" placeholder="نظر شما..."></textarea><button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg">ارسال دیدگاه</button></form>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        lucide.createIcons();
+    }
+    
+    function renderFaqPage() {
+        getEl('faq-container').innerHTML = DB.faq.map((item, index) => `<div class="bg-white rounded-lg shadow"><button onclick="toggleAccordion(${index})" class="w-full flex justify-between items-center p-5 font-semibold text-right"><span>${item.q}</span><i data-lucide="chevron-down" class="transition-transform"></i></button><div class="accordion-content"><p class="p-5 pt-0 text-gray-600">${item.a}</p></div></div>`).join('');
+    }
+
+    // --- منطق سبد خرید ---
+    function addToCart(productId) {
+        const product = DB.products.find(p => p.id === productId);
+        if (!product) return;
+        const existingItem = state.cart.find(item => item.id === productId);
+        if (existingItem) existingItem.quantity++;
+        else state.cart.push({ ...product, quantity: 1 });
+        updateHeaderCartCount();
+        showToast(`"${product.title}" به سبد خرید اضافه شد.`);
+    }
+
+    function updateHeaderCartCount() {
+        const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+        getEl('cart-item-count').textContent = totalItems;
+    }
+    
+    function renderCartPage() {
+        const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+        getEl('cart-page-item-count').textContent = totalItems;
+
+        const cartItemsContainer = getEl('cart-items-container');
+        const cartSummaryContainer = getEl('cart-summary-container');
+
+        if (state.cart.length === 0) {
+            cartItemsContainer.innerHTML = '<div class="bg-white p-4 rounded-lg shadow min-h-[100px] flex items-center justify-center"><p class="text-gray-500 text-center py-8">سبد خرید شما خالی است.</p></div>';
+            cartSummaryContainer.innerHTML = '';
+        } else {
+            cartItemsContainer.innerHTML = state.cart.map((item, index) => `<div class="bg-white p-4 rounded-lg shadow mb-4"><div class="flex items-center justify-between"><div class="flex items-center gap-4"><img src="${item.imgSrc}" class="w-24 h-24 object-cover rounded-lg"><div><p class="font-semibold">${item.title}</p><p class="text-sm text-gray-500">قیمت واحد: ${formatPrice(item.salePrice ?? item.price)}</p></div></div><div class="flex flex-col items-end gap-4"><div class="flex items-center border rounded-lg"><button onclick="changeQuantity(${index}, 1)" class="px-3 py-1 text-lg digikala-red">+</button><span class="px-4 font-bold">${item.quantity}</span><button onclick="changeQuantity(${index}, -1)" class="px-3 py-1 text-lg digikala-red">-</button></div><button onclick="removeFromCart(${index})" class="text-gray-500 hover:text-red-700"><i data-lucide="trash-2" class="w-5 h-5"></i></button></div></div></div>`).join('');
+            cartSummaryContainer.innerHTML = `<div class="bg-white p-4 rounded-lg shadow sticky top-24">${renderCartSummaryHTML()}</div>`;
+        }
+        lucide.createIcons();
+    }
+
+    function renderCartSummaryHTML() {
+        const subtotal = state.cart.reduce((sum, item) => sum + (item.salePrice ?? item.price) * item.quantity, 0);
+        const totalSavings = state.cart.reduce((sum, item) => sum + (item.salePrice ? (item.price - item.salePrice) * item.quantity : 0), 0);
+        const totalItems = state.cart.reduce((s,i)=>s+i.quantity,0);
+        const totalAfterDiscount = subtotal * (1 - state.appliedDiscount);
+        return `<div class="flex justify-between mb-2 text-gray-600"><span>قیمت کالاها (<span id="cart-summary-item-count">${totalItems}</span>)</span><span>${formatPrice(subtotal)}</span></div><div class="flex justify-between mb-4 text-gray-600"><span>سود شما از خرید</span><span class="digikala-red">${formatPrice(totalSavings)}</span></div><div class="flex justify-between font-bold text-lg mb-4 border-t pt-4"><span>جمع سبد خرید</span><span>${formatPrice(totalAfterDiscount)}</span></div><div class="mb-4"><label for="discount-code" class="font-semibold block mb-2">کد تخفیف</label><div class="flex"><input type="text" id="discount-code" placeholder="کد تخفیف" class="w-full px-3 py-2 border rounded-r-lg focus:outline-none focus:ring-2 ring-digikala-red"><button onclick="applyDiscount()" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-l-lg font-semibold hover:bg-gray-300">ثبت</button></div><p id="discount-message" class="text-xs mt-1"></p></div><button onclick="startCheckout()" class="w-full bg-digikala-green text-white py-3 rounded-lg font-semibold hover:bg-green-600">ادامه فرآیند خرید</button>`;
+    }
+
+    function changeQuantity(index, amount) {
+        state.cart[index].quantity += amount;
+        if (state.cart[index].quantity <= 0) state.cart.splice(index, 1);
+        updateHeaderCartCount();
+        renderCartPage();
+    }
+
+    function removeFromCart(index) {
+        state.cart.splice(index, 1);
+        updateHeaderCartCount();
+        renderCartPage();
+    }
+
+    function applyDiscount() {
+        const code = getEl('discount-code').value.trim().toUpperCase();
+        const msgEl = getEl('discount-message');
+        if (code === 'SALE20') {
+            state.appliedDiscount = 0.20;
+            msgEl.textContent = 'کد تخفیف ۲۰٪ با موفقیت اعمال شد!';
+            msgEl.className = 'text-xs mt-1 text-green-600';
+        } else {
+            state.appliedDiscount = 0;
+            msgEl.textContent = 'کد تخفیف وارد شده معتبر نیست.';
+            msgEl.className = 'text-xs mt-1 digikala-red';
+        }
+        renderCartPage();
+    }
+
+    // --- منطق احراز هویت ---
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = getEl('login-email').value;
+        const password = getEl('login-password').value;
+        const user = DB.users.find(u => u.email === email && u.password === password);
+        if (user) {
+            state.currentUser = user;
+            updateAuthUI();
+            if (state.postLoginRedirect) {
+                const redirectPage = state.postLoginRedirect;
+                state.postLoginRedirect = null;
+                navigateTo(redirectPage);
+            } else {
+                navigateTo('dashboard-page');
+            }
+        } else {
+            showToast('ایمیل یا رمز عبور اشتباه است.', 'error');
+        }
+    }
+
+    function handleRegister(e) {
+        e.preventDefault();
+        const name = getEl('register-name').value;
+        const email = getEl('register-email').value;
+        const password = getEl('register-password').value;
+        if (DB.users.some(u => u.email === email)) {
+            showToast('این ایمیل قبلا ثبت شده است.', 'error');
+            return;
+        }
+        const newUser = { id: DB.users.length + 1, name, email, password, joinDate: new Date().toLocaleDateString('fa-IR'), wishlist: [] };
+        DB.users.push(newUser);
+        state.currentUser = newUser;
+        updateAuthUI();
+        navigateTo('dashboard-page');
+    }
+
+    function logout() {
+        state.currentUser = null;
+        updateAuthUI();
+        navigateTo('home-page');
+    }
+
+    function updateAuthUI() {
+        const authLinkText = getEl('auth-link-text');
+        const dashboardUserInfo = getEl('dashboard-user-info');
+        if (state.currentUser) {
+            authLinkText.textContent = 'حساب کاربری';
+            getEl('auth-link-text').parentElement.setAttribute('onclick', "navigateTo('dashboard-page')");
+            if(dashboardUserInfo) dashboardUserInfo.innerHTML = `<p class="font-bold">${state.currentUser.name}</p><p class="text-sm text-gray-500">${state.currentUser.email}</p>`;
+        } else {
+            authLinkText.textContent = 'ورود | ثبت‌نام';
+            getEl('auth-link-text').parentElement.setAttribute('onclick', "navigateTo('login-page')");
+            if(dashboardUserInfo) dashboardUserInfo.innerHTML = `<p class="font-bold">کاربر مهمان</p>`;
+        }
+    }
+
+    // --- منطق فرآیند خرید ---
+    function startCheckout() {
+        if (state.cart.length === 0) {
+            showToast('سبد خرید شما خالی است.', 'error');
+            return;
+        }
+        if (state.currentUser) {
+            state.currentCheckoutStep = 'info';
+            navigateTo('checkout-flow-page');
+        } else {
+            state.postLoginRedirect = 'checkout-flow-page';
+            navigateTo('login-page');
+            showToast('برای ادامه، لطفا وارد حساب کاربری خود شوید.', 'info');
+        }
+    }
+
+    function renderCheckoutFlowPage() {
+        getEl('checkout-summary-container').innerHTML = `<div class="bg-white p-4 rounded-lg shadow sticky top-24">${renderCartSummaryHTML().replace('ادامه فرآیند خرید', 'پرداخت نهایی')}</div>`;
+        const stepsContainer = getEl('checkout-steps-container');
+        if (state.currentCheckoutStep === 'info') {
+            stepsContainer.innerHTML = `<div class="bg-white p-6 rounded-lg shadow"><h2 class="text-xl font-bold mb-4">۱. تایید اطلاعات</h2><p class="mb-4">محصولات به ایمیل شما ارسال و در پنل کاربری قابل دسترس خواهند بود.</p><div class="mb-4"><p class="font-semibold">ایمیل:</p><p class="text-gray-700">${state.currentUser.email}</p></div><button onclick="setCheckoutStep('payment')" class="w-full bg-digikala-green text-white py-3 rounded-lg font-semibold">ادامه و انتخاب روش پرداخت</button></div>`;
+        } else if (state.currentCheckoutStep === 'payment') {
+            stepsContainer.innerHTML = `<div class="bg-white p-6 rounded-lg shadow"><h2 class="text-xl font-bold mb-4">۲. انتخاب روش پرداخت</h2><div class="space-y-4"><label class="flex items-center p-4 border rounded-lg cursor-pointer"><input type="radio" name="payment" class="ml-4" checked><span>پرداخت آنلاین (درگاه امن بانکی)</span></label><label class="flex items-center p-4 border rounded-lg cursor-pointer"><input type="radio" name="payment" class="ml-4"><span>کیف پول فایل‌کالا</span></label></div><div class="mt-6 flex gap-4"><button onclick="setCheckoutStep('info')" class="w-full bg-gray-200 py-3 rounded-lg font-semibold">بازگشت</button><button onclick="confirmOrder()" class="w-full bg-digikala-green text-white py-3 rounded-lg font-semibold">تایید و پرداخت نهایی</button></div></div>`;
+        }
+    }
+
+    function setCheckoutStep(step) {
+        state.currentCheckoutStep = step;
+        renderCheckoutFlowPage();
+    }
+
+    function confirmOrder() {
+        const total = state.cart.reduce((sum, item) => sum + (item.salePrice ?? item.price) * item.quantity, 0) * (1 - state.appliedDiscount);
+        const orderId = `DKC-${Math.floor(Math.random() * 900000) + 100000}`;
+        DB.orders.push({ id: orderId, userId: state.currentUser.id, date: new Date().toLocaleDateString('fa-IR'), total, status: 'تکمیل شده' });
+        getEl('order-success-code').textContent = orderId;
+        state.cart = [];
+        state.appliedDiscount = 0;
+        updateHeaderCartCount();
+        navigateTo('order-success-page');
+    }
+    
+    // --- منطق داشبورد کاربری ---
+    function renderDashboardPage() {
+        const navContainer = getEl('dashboard-nav');
+        navContainer.innerHTML = `
+            <a href="#" onclick="renderDashboardSubpage('orders')" class="dashboard-nav-link flex items-center gap-3 px-4 py-3 rounded-lg bg-red-50 text-digikala-red font-bold"><i data-lucide="package"></i>سفارش‌های من</a>
+            <a href="#" onclick="renderDashboardSubpage('wishlist')" class="dashboard-nav-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100"><i data-lucide="heart"></i>لیست علاقه‌ها</a>
+            <a href="#" onclick="renderDashboardSubpage('account')" class="dashboard-nav-link flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100"><i data-lucide="user-cog"></i>اطلاعات حساب</a>
+            <a href="#" onclick="logout()" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100"><i data-lucide="log-out"></i>خروج</a>`;
+        renderDashboardSubpage('orders');
+        lucide.createIcons();
+    }
+
+    function renderDashboardSubpage(subpage) {
+        document.querySelectorAll('.dashboard-nav-link').forEach(l => l.classList.remove('bg-red-50', 'text-digikala-red', 'font-bold'));
+        document.querySelector(`.dashboard-nav-link[onclick*="${subpage}"]`).classList.add('bg-red-50', 'text-digikala-red', 'font-bold');
+        const contentContainer = getEl('dashboard-content');
+        if(subpage === 'orders') {
+            const userOrders = DB.orders.filter(o => o.userId === state.currentUser.id);
+            let tableContent = '<tr><td colspan="4" class="text-center p-4 text-gray-500">سفارشی یافت نشد.</td></tr>';
+            if(userOrders.length > 0) {
+                 tableContent = userOrders.map(o => ` <tr class="border-b"><td class="p-3 font-mono">${o.id}</td><td class="p-3">${o.date}</td><td class="p-3">${formatPrice(o.total)}</td><td class="p-3"><span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">${o.status}</span></td></tr>`).join('');
+            }
+            contentContainer.innerHTML = `<div class="bg-white p-6 rounded-lg shadow"><h1 class="text-xl font-bold mb-6">سفارش‌های من</h1><div class="overflow-x-auto"><table class="w-full text-sm text-right"><thead class="text-gray-500 bg-gray-50"><tr><th class="p-3">کد سفارش</th><th class="p-3">تاریخ</th><th class="p-3">مبلغ کل</th><th class="p-3">وضعیت</th></tr></thead><tbody>${tableContent}</tbody></table></div></div>`;
+        } else if (subpage === 'account') {
+            contentContainer.innerHTML = `<div class="bg-white p-6 rounded-lg shadow"><h1 class="text-xl font-bold mb-6">اطلاعات حساب</h1><p>نام: ${state.currentUser.name}</p><p>ایمیل: ${state.currentUser.email}</p></div>`;
+        } else if (subpage === 'wishlist') {
+            const wishlistProducts = DB.products.filter(p => state.currentUser.wishlist.includes(p.id));
+            let wishlistContent = '<p class="text-gray-500">لیست علاقه‌مندی‌های شما خالی است.</p>';
+            if(wishlistProducts.length > 0) {
+                wishlistContent = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${wishlistProducts.map(p => createProductCard(p)).join('')}</div>`;
+            }
+            contentContainer.innerHTML = `<div class="bg-white p-6 rounded-lg shadow"><h1 class="text-xl font-bold mb-6">لیست علاقه‌مندی‌ها</h1>${wishlistContent}</div>`;
+        }
+    }
+
+    // --- منطق جستجو و فیلتر ---
+    function handleSearchAndFilter() {
+        const searchTerm = getEl('search-input').value.toLowerCase();
+        const checkedCategories = [...document.querySelectorAll('.category-filter:checked')].map(cb => cb.value);
+        
+        const filteredProducts = DB.products.filter(p => {
+            const matchesSearch = p.title.toLowerCase().includes(searchTerm);
+            const matchesCategory = checkedCategories.length === 0 || checkedCategories.includes(p.category);
+            return matchesSearch && matchesCategory;
+        });
+
+        navigateTo('products-page');
+        getEl('all-products-container').innerHTML = filteredProducts.map(p => createProductCard(p, false)).join('');
+        lucide.createIcons();
+    }
+    
+    function addFilterEventListeners() {
+        getEl('search-input').addEventListener('input', handleSearchAndFilter);
+        document.querySelectorAll('.category-filter').forEach(cb => cb.addEventListener('change', handleSearchAndFilter));
+    }
+
+    // --- منطق لیست علاقه‌مندی‌ها ---
+    function toggleWishlist(productId) {
+        if (!state.currentUser) {
+            showToast('برای افزودن به علاقه‌مندی‌ها، لطفا وارد شوید.', 'error');
+            return;
+        }
+        const wishlist = state.currentUser.wishlist;
+        const productIndex = wishlist.indexOf(productId);
+        if (productIndex > -1) {
+            wishlist.splice(productIndex, 1);
+            showToast('محصول از علاقه‌مندی‌ها حذف شد.');
+        } else {
+            wishlist.push(productId);
+            showToast('محصول به علاقه‌مندی‌ها اضافه شد.');
+        }
+        // Re-render the button to update its state
+        const button = document.querySelector(`.wishlist-btn[onclick*="toggleWishlist(${productId})"]`);
+        if(button) {
+            button.classList.toggle('active', productIndex === -1);
+        }
+    }
+
+
+    // --- توابع تعاملی دیگر ---
+    function toggleAccordion(index) {
+        const button = document.querySelectorAll('#faq-container button')[index];
+        const content = button.nextElementSibling;
+        const icon = button.querySelector('i');
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+    
+    function changeMainImage(src) {
+        getEl('main-product-image').src = src;
+    }
+
+    function switchTab(button, tabId) {
+        // Hide all tab contents
+        button.parentElement.parentElement.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        // Deactivate all tab buttons
+        button.parentElement.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
+        // Activate the clicked tab and content
+        button.classList.add('active');
+        getEl(tabId).classList.add('active');
+    }
+
+    // --- راه‌اندازی اولیه برنامه ---
+    document.addEventListener('DOMContentLoaded', () => {
+        getEl('login-form').addEventListener('submit', handleLogin);
+        getEl('register-form').addEventListener('submit', handleRegister);
+        
+        navigateTo('home-page');
+        renderHomePage();
+        renderProductsPage();
+        renderFaqPage();
+        updateHeaderCartCount();
+        updateAuthUI();
+        lucide.createIcons();
+    });
+    </script>
+</body>
+</html>
